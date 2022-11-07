@@ -1,0 +1,82 @@
+<html>
+<head>
+    <title>Three.js - Material Biasa</title>
+
+    <style>
+    	body{
+    		margin: 0;
+    		overflow: hidden;
+    	}
+      div {
+        width: 300px;
+        height: 300px;
+        background-color: blue;
+      }
+    </style>
+</head>
+<body>  
+  
+  <div id="container">
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+      var deg_to_rad_factor = Math.PI / 180.;
+      $(window).load(function() {
+        console.log("3d");
+      
+        var cont = $("#container");
+        var camera = new THREE.PerspectiveCamera( 70, cont.width() / cont.height(), 1, 1000 );
+        camera.position.z = 50;
+        var scene = new THREE.Scene();
+      
+        // ground
+        geometry = new THREE.BoxBufferGeometry( 60, 60, 0.01 );
+        material = new THREE.ShadowMaterial( { opacity : 0.5 } );
+        material.opacity = 0.5;
+        ground = new THREE.Mesh( geometry, material );
+        ground.position.y = 0.0;
+        ground.receiveShadow = true;
+        scene.add( ground );
+      
+        // box
+        geometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
+        material = new THREE.MeshLambertMaterial( { color: 'rgb(255,0,0)' } );
+        mesh = new THREE.Mesh( geometry, material );
+        mesh.position.x = 20;
+        mesh.position.z = mesh.scale.z/2;
+        mesh.rotation.z = deg_to_rad_factor * 45;
+        mesh.castShadow = true;
+        scene.add( mesh );
+      
+        // sun
+        var sunLight = new THREE.DirectionalLight( 'rgb(255,255,255)', 1 );
+        sunLight.position.set( 0, 2 , 1 );
+        sunLight.castShadow = true;
+      
+        var lit = 200;
+        sunLight.shadow.camera.right = lit;
+        sunLight.shadow.camera.left = -lit;
+        sunLight.shadow.camera.top = lit;
+        sunLight.shadow.camera.bottom = -lit;
+        sunLight.shadow.mapSize.width = 1024*4;
+        sunLight.shadow.mapSize.height = 1024*4;
+      
+        scene.add( sunLight );
+      
+        var light = new THREE.AmbientLight( 0x0f0f0f ); // soft white light
+        scene.add( light );
+      
+        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize(cont.width(),cont.height());
+        renderer.shadowMap.enabled = true;
+      
+      
+        cont.append(renderer.domElement);
+      
+        renderer.render( scene, camera );
+      });
+    </script>
+</body>
+</html>
