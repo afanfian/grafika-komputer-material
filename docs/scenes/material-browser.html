@@ -176,6 +176,20 @@
 
 			} )();
 
+			const sheenRoughnessMaps = ( function () {
+
+				const bricks = textureLoader.load( '../../examples/textures/brick_roughness.jpg' );
+				bricks.wrapT = THREE.RepeatWrapping;
+				bricks.wrapS = THREE.RepeatWrapping;
+				bricks.repeat.set( 9, 1 );
+
+				return {
+					none: null,
+					bricks: bricks
+				};
+
+			} )();
+
 			const matcaps = ( function () {
 
 				return {
@@ -221,6 +235,7 @@
 			const envMapKeysPBR = envMapKeys.slice( 0, 2 );
 			const diffuseMapKeys = getObjectsKeys( diffuseMaps );
 			const roughnessMapKeys = getObjectsKeys( roughnessMaps );
+			const sheenRoughnessMapKeys = getObjectsKeys( sheenRoughnessMaps );
 			const matcapKeys = getObjectsKeys( matcaps );
 			const alphaMapKeys = getObjectsKeys( alphaMaps );
 			const gradientMapKeys = getObjectsKeys( gradientMaps );
@@ -576,6 +591,9 @@
 				folder.add( material, 'reflectivity', 0, 1 );
 				folder.add( material, 'clearcoat', 0, 1 ).step( 0.01 );
 				folder.add( material, 'clearcoatRoughness', 0, 1 ).step( 0.01 );
+				// folder.add( material, 'sheen', 0, 1 ).step( 0.01 ); //edited
+				// folder.add( material, 'sheenRoughness', 0, 1 ).step( 0.01 ); //edited
+				folder.add( material, 'transmission', 0, 1 ).step( 0.01 ); //edited
 				folder.add( material, 'flatShading' ).onChange( needsUpdate( material, geometry ) );
 				folder.add( material, 'wireframe' );
 				folder.add( material, 'vertexColors' ).onChange( needsUpdate( material, geometry ) );
@@ -583,6 +601,7 @@
 				folder.add( data, 'envMaps', envMapKeysPBR ).onChange( updateTexture( material, 'envMap', envMaps ) );
 				folder.add( data, 'map', diffuseMapKeys ).onChange( updateTexture( material, 'map', diffuseMaps ) );
 				folder.add( data, 'roughnessMap', roughnessMapKeys ).onChange( updateTexture( material, 'roughnessMap', roughnessMaps ) );
+				// folder.add( data, 'sheenRoughnessMap', sheenRoughnessMapKeys ).onChange( updateTexture( material, 'sheenRoughnessMap', sheenRoughnessMaps ) ); //edited
 				folder.add( data, 'alphaMap', alphaMapKeys ).onChange( updateTexture( material, 'alphaMap', alphaMaps ) );
 
 				// TODO metalnessMap
